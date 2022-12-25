@@ -37,8 +37,8 @@ class YaDisk(object):
         resp = r.get(self.URL[0]+'/files', params=params, headers=self.headers)
         return json.loads(resp.text)
 
-    def deleteDir(self, path,permanently=False):
-        params = {'path': path,'permanently':permanently}
+    def deleteDir(self, path, permanently=False):
+        params = {'path': path, 'permanently': permanently}
 
         resp = r.delete(self.URL[0], headers=self.headers, params=params)
         if resp.status_code == 404:
@@ -53,4 +53,10 @@ class YaDisk(object):
         if resp.status_code == 409:
             print(
                 "This dir is already exists. Whould you like to delete it and create new? ")
+        return json.loads(resp.text)
+
+    def move(self, path_from, path_to, fields='', overwrite=False):
+        params = {"from": path_from, "path": path_to+path_from,
+                  "fields": fields, "overwrite": overwrite}
+        resp = r.post(self.URL[0]+"/move", params=params, headers=self.headers)
         return json.loads(resp.text)
